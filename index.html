@@ -1241,7 +1241,7 @@ function showToast(msg, duration=2200){
 }
 
 // ══════════ GOOGLE DRIVE ══════════
-let _gdToken=null,_gdFileId=null,_gdClient=null;
+let _gdFileId=null,_gdClient=null;
 
 function initGDClient(){
   if(!_settings.gdClientId||typeof google==='undefined') return;
