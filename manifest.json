@@ -1,0 +1,12 @@
+{
+  "name": "Brunch CMS",
+  "short_name": "Brunch",
+  "description": "연재 기획 & 노트 앱",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0b0b0e",
+  "theme_color": "#0b0b0e",
+  "lang": "ko",
+  "icons": [{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}

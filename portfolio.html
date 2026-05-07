@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta id="seoTitle" name="title" content="연재 포트폴리오">
+<meta id="seoDesc" name="description" content="">
+<meta id="seoKeys" name="keywords" content="">
+<title id="pageTitle">연재 포트폴리오</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="./rss.xml">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#0b0b0e;color:#ddd8cc;font-family:'Noto Serif KR',serif;font-size:16px;line-height:1.85;}
+a{color:inherit;text-decoration:none;}
+.header{max-width:800px;margin:0 auto;padding:60px 24px 40px;border-bottom:1px solid #2a2a38;}
+.header-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.site-title{font-size:28px;font-weight:700;letter-spacing:-.03em;}
+.rss-link{font-family:'Noto Sans KR',sans-serif;font-size:12px;padding:6px 14px;border:1px solid #2a2a38;border-radius:20px;color:#7a7890;transition:all .2s;}
+.rss-link:hover{border-color:#7a7890;color:#ddd8cc;}
+.site-sub{font-family:'Noto Sans KR',sans-serif;font-size:14px;color:#7a7890;margin-top:8px;}
+.updated{font-family:'Noto Sans KR',sans-serif;font-size:11px;color:#4a4a60;margin-top:6px;}
+.main{max-width:800px;margin:0 auto;padding:40px 24px;}
+.series-block{margin-bottom:56px;}
+.series-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid #2a2a38;}
+.series-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.series-title{font-size:20px;font-weight:600;letter-spacing:-.02em;}
+.series-meta{font-family:'Noto Sans KR',sans-serif;font-size:12px;color:#7a7890;margin-left:auto;}
+.season-block{margin-bottom:24px;}
+.season-title{font-family:'Noto Sans KR',sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#4a4a60;margin-bottom:10px;}
+.ep-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #1f1f2c;}
+.ep-row:last-child{border-bottom:none;}
+.ep-dot{width:5px;height:5px;border-radius:50%;background:#2a2a38;flex-shrink:0;}
+.ep-dot.done{background:currentColor;}
+.ep-title{flex:1;font-size:14px;}
+.ep-thesis{font-family:'Noto Sans KR',sans-serif;font-size:12px;color:#7a7890;max-width:300px;text-align:right;}
+.ep-tags{display:flex;gap:4px;flex-wrap:wrap;flex-shrink:0;}
+.ep-tag{font-family:'Noto Sans KR',sans-serif;font-size:10px;padding:2px 7px;border-radius:10px;background:#1a1a22;color:#7a7890;}
+.ep-chars{font-family:'Noto Sans KR',sans-serif;font-size:10px;color:#4a4a60;white-space:nowrap;}
+.empty{text-align:center;padding:60px 24px;color:#4a4a60;}
+.footer{max-width:800px;margin:0 auto;padding:24px;border-top:1px solid #2a2a38;font-family:'Noto Sans KR',sans-serif;font-size:12px;color:#4a4a60;text-align:center;}
+@media(max-width:600px){.ep-thesis,.ep-chars{display:none;}.series-meta{display:none;}}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-top">
+    <div>
+      <div class="site-title" id="siteTitle">연재 포트폴리오</div>
+      <div class="site-sub" id="siteSub"></div>
+      <div class="updated" id="updatedAt"></div>
+    </div>
+    <a class="rss-link" href="./rss.xml">RSS 구독</a>
+  </div>
+</div>
+<div class="main" id="main"><div class="empty">데이터를 불러오는 중...</div></div>
+<div class="footer">Brunch CMS · 연재 포트폴리오</div>
+
+<script>
+const COLORS=['#c4935a','#5a9c8a','#8a6faa','#6a8faa','#aa6a7a','#7aaa6a','#aaa06a','#7a8aaa'];
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+async function load(){
+  try{
+    const res=await fetch('./portfolio-data.json?_='+Date.now());
+    if(!res.ok) throw new Error('파일 없음');
+    const data=await res.json();
+    render(data);
+  }catch(e){
+    document.getElementById('main').innerHTML='<div class="empty">포트폴리오 데이터가 없습니다.<br><small style="font-size:12px">앱에서 '포트폴리오 업데이트' 버튼을 눌러주세요.</small></div>';
+  }
+}
+
+function render(data){
+  // SEO
+  const firstSeries=data.series?.[0];
+  const seo=firstSeries?.seo||{};
+  document.getElementById('pageTitle').textContent=seo.title||firstSeries?.title||'연재 포트폴리오';
+  document.getElementById('siteTitle').textContent=seo.title||firstSeries?.title||'연재 포트폴리오';
+  document.getElementById('siteSub').textContent=seo.description||firstSeries?.subtitle||'';
+  if(seo.keywords) document.getElementById('seoKeys').setAttribute('content',seo.keywords);
+  const d=new Date(data.updatedAt);
+  document.getElementById('updatedAt').textContent='마지막 업데이트: '+d.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});
+
+  if(!data.series?.length){document.getElementById('main').innerHTML='<div class="empty">연재가 없습니다.</div>';return;}
+
+  let h='';
+  data.series.forEach(s=>{
+    const clr=COLORS[s.colorIdx%COLORS.length];
+    const totalEps=s.seasons.reduce((a,ss)=>a+ss.episodes.length,0);
+    const written=s.seasons.reduce((a,ss)=>a+ss.episodes.filter(e=>e.hasContent).length,0);
+    h+=`<div class="series-block">
+      <div class="series-header">
+        <span class="series-dot" style="background:${clr}"></span>
+        <span class="series-title">${esc(s.title)}</span>
+        <span class="series-meta" style="color:${clr}">${written}/${totalEps}화 · ${s.schedule||''}</span>
+      </div>`;
+    s.seasons.forEach(ss=>{
+      h+=`<div class="season-block"><div class="season-title">${esc(ss.title)}</div>`;
+      ss.episodes.forEach(ep=>{
+        h+=`<div class="ep-row">
+          <span class="ep-dot${ep.hasContent?' done':''}" style="${ep.hasContent?'color:'+clr:''}"></span>
+          <span class="ep-title">${esc(ep.title)}</span>
+          ${ep.tags?.length?`<span class="ep-tags">${ep.tags.slice(0,3).map(t=>`<span class="ep-tag">#${esc(t)}</span>`).join('')}</span>`:''}
+          ${ep.thesis?`<span class="ep-thesis">${esc(ep.thesis)}</span>`:''}
+          ${ep.charCount?`<span class="ep-chars">${ep.charCount.toLocaleString()}자</span>`:''}
+        </div>`;
+      });
+      h+='</div>';
+    });
+    h+='</div>';
+  });
+  document.getElementById('main').innerHTML=h;
+}
+
+load();
+</script>
+</body>
+</html>
