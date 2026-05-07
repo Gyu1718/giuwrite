@@ -67,7 +67,7 @@ async function load(){
     const data=await res.json();
     render(data);
   }catch(e){
-    document.getElementById('main').innerHTML='<div class="empty">포트폴리오 데이터가 없습니다.<br><small style="font-size:12px">앱에서 '포트폴리오 업데이트' 버튼을 눌러주세요.</small></div>';
+    document.getElementById('main').innerHTML=`<div class="empty">포트폴리오 데이터가 없습니다.<br><small style="font-size:12px">앱에서 '포트폴리오 업데이트' 버튼을 눌러주세요.</small></div>`;
   }
 }
 

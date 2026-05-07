@@ -737,8 +737,7 @@ function doSearch(q){
     const contentMatch=content.toLowerCase().includes(ql);
     if(titleMatch||contentMatch){
       let snippet='';
-      if(contentMatch){const idx=content.toLowerCase().indexOf(ql);snippet=content.slice(Math.max(0,idx-40),idx+80).replace(/
-/g,' ');}
+      if(contentMatch){const idx=content.toLowerCase().indexOf(ql);snippet=content.slice(Math.max(0,idx-40),idx+80).replace(/\n/g,' ');}
       results.push({sid:s.id,ssid:ss.id,eid:ep.id,title:ep.title,seriesTitle:s.title,snippet});
     }
   })));
@@ -1072,7 +1071,7 @@ function expHTML(s,arts,ct,fname){
 .seo-area{background:var(--card);border:1px solid var(--br);border-radius:var(--radius);padding:14px;margin-top:12px;}
 .seo-label{font-family:'Noto Sans KR',sans-serif;font-size:11px;color:var(--dm);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
 
-</style><script src="https://accounts.google.com/gsi/client" async defer></script>
+</style>
 </head><body><h1>${esc(s.title)}</h1>${s.subtitle?`<p style="color:#666">${esc(s.subtitle)}</p>`:''}<hr>${body}
 <!-- HISTORY MODAL -->
 <div class="modal-bg" id="histModal">
@@ -1110,7 +1109,7 @@ async function expEPUB(s,arts,ct,fname){
   oebps.file('style.css',`body{font-family:'Noto Serif KR',serif;font-size:1em;line-height:1.9;color:#1a1a1a;margin:1.5em 1.5em 1.5em 1.5em;}h1{font-size:1.8em;margin-bottom:.4em;border-bottom:2px solid #333;padding-bottom:.3em;}h2{font-size:1.3em;margin:2em 0 .8em;}h3{font-size:1.1em;margin:1.5em 0 .6em;}p{margin-bottom:.9em;text-indent:1.5em;}.tag{font-size:.8em;background:#f0f0f0;padding:1px 6px;border-radius:8px;margin-right:3px;}.meta{color:#666;font-size:.85em;margin-bottom:1.5em;}`);
   const chapters=[];let ci=0;
   // Cover
-  const coverXHTML=`<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko"><head><title>${esc(s.title)}</title><link rel="stylesheet" href="style.css"/><script src="https://accounts.google.com/gsi/client" async defer></script>
+  const coverXHTML=`<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko"><head><title>${esc(s.title)}</title><link rel="stylesheet" href="style.css"/>
 </head><body><h1>${esc(s.title)}</h1>${s.subtitle?`<p class="meta">${esc(s.subtitle)}</p>`:''}
 <!-- HISTORY MODAL -->
 <div class="modal-bg" id="histModal">
@@ -1126,7 +1125,7 @@ async function expEPUB(s,arts,ct,fname){
 </body></html>`;
   oebps.file('ch000.xhtml',coverXHTML);chapters.push({id:'ch000',f:'ch000.xhtml',t:s.title});
   s.seasons.forEach(ss=>{
-    s.seasons.length>1&&(()=>{const id=`ch${String(ci).padStart(3,'0')}`;ci++;oebps.file(`${id}.xhtml`,`<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko"><head><title>${esc(ss.title)}</title><link rel="stylesheet" href="style.css"/><script src="https://accounts.google.com/gsi/client" async defer></script>
+    s.seasons.length>1&&(()=>{const id=`ch${String(ci).padStart(3,'0')}`;ci++;oebps.file(`${id}.xhtml`,`<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko"><head><title>${esc(ss.title)}</title><link rel="stylesheet" href="style.css"/>
 </head><body><h2>${esc(ss.title)}</h2>
 <!-- HISTORY MODAL -->
 <div class="modal-bg" id="histModal">
@@ -1148,7 +1147,7 @@ async function expEPUB(s,arts,ct,fname){
       if(ep.tags?.length) body+=`<div class="meta">${ep.tags.map(t=>`<span class="tag">#${esc(t)}</span>`).join('')}</div>`;
       if(ct==='outlines'||ct==='both'){const tmpl=EP_TEMPLATES[s.template]||EP_TEMPLATES.free;body+='<div class="outline">';tmpl.fields.forEach(f=>{if(ep[f.k]) body+=`<p><strong>${esc(f.l)}:</strong> ${esc(ep[f.k])}</p>`;});body+='</div>';}
       if(ct==='articles'||ct==='both'){if(art) body+=art.split('\n\n').map(p=>p.trim()?`<p>${esc(p).replace(/\n/g,'<br/>')}</p>`:'').join('');}
-      oebps.file(`${id}.xhtml`,`<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko"><head><title>${esc(ep.title)}</title><link rel="stylesheet" href="style.css"/><script src="https://accounts.google.com/gsi/client" async defer></script>
+      oebps.file(`${id}.xhtml`,`<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko"><head><title>${esc(ep.title)}</title><link rel="stylesheet" href="style.css"/>
 </head><body>${body}
 <!-- HISTORY MODAL -->
 <div class="modal-bg" id="histModal">
@@ -1167,7 +1166,7 @@ async function expEPUB(s,arts,ct,fname){
   });
   const uuid='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return(c==='x'?r:r&3|8).toString(16);});
   oebps.file('content.opf',`<?xml version="1.0" encoding="UTF-8"?><package version="3.0" xmlns="http://www.idpf.org/2007/opf" unique-identifier="uid" xml:lang="ko"><metadata xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:title>${esc(s.title)}</dc:title><dc:language>ko</dc:language><dc:identifier id="uid">urn:uuid:${uuid}</dc:identifier><meta property="dcterms:modified">${new Date().toISOString().slice(0,19)}Z</meta></metadata><manifest><item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/><item id="css" href="style.css" media-type="text/css"/>${chapters.map(c=>`<item id="${c.id}" href="${c.f}" media-type="application/xhtml+xml"/>`).join('')}</manifest><spine><itemref idref="nav"/>${chapters.map(c=>`<itemref idref="${c.id}"/>`).join('')}</spine></package>`);
-  oebps.file('nav.xhtml',`<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ko"><head><title>목차</title><link rel="stylesheet" href="style.css"/><script src="https://accounts.google.com/gsi/client" async defer></script>
+  oebps.file('nav.xhtml',`<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="ko"><head><title>목차</title><link rel="stylesheet" href="style.css"/>
 </head><body><nav epub:type="toc"><h1>목차</h1><ol>${chapters.map(c=>`<li><a href="${c.f}">${esc(c.t)}</a></li>`).join('')}</ol></nav>
 <!-- HISTORY MODAL -->
 <div class="modal-bg" id="histModal">
